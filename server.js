@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
+import cron from 'node-cron'
 import colors from 'colors'
 import asyncHandler from 'express-async-handler'
 
@@ -81,10 +82,7 @@ const updateDoctorProfile = asyncHandler(async (req, res) => {
         doctor.phoneNumber = req.body.phoneNumber || doctor.phoneNumber, 
         doctor.specialization = req.body.specialization || doctor.specialization, 
         doctor.hospitalAffiliation = req.body.hospitalAffiliation || doctor.hospitalAffiliation
-       
-        if(req.body.appointmentTime) {
-            doctor.slotesBooked = doctor.slotesBooked.append(req.body.appointmentTime)
-        }
+
         if (req.body.password) {
             doctor.password = req.body.password
         }
@@ -129,14 +127,62 @@ const deleteDoctor = asyncHandler(async (req, res) => {
       throw new Error('Doctor not found')
     }
 })
+
+const updateAvailability = asyncHandler(async(req, res) => {
+  const result = await Doctor.updateOne({_id: req.params._id, 'availability.date': req.body.date},{
+    $pull: {
+      'availability.$.timeSlotes': time
+    }
+  })
+
+  if(result.nModified > 0) {
+    console.log('Successfully updated');
+  }
+  else {
+    console.log('Not updated');
+  }
+
+  if(result) {
+
+  }
+  else {
+    throw new Error('Not found specific day')
+  }  
+})
   
 //CRUD
-
 app.post('/hospital/doctor', registerDoctor)
 app.get('/hospital/doctor', getDoctors)
 app.put('/hospital/doctor/:id', updateDoctorProfile)
 app.get('/hospital/doctor/:id', getDoctorById)
 app.delete('/hospital/doctor/:id', deleteDoctor)
+app.put('/hospital/doctor/:id', updateAvailability)
+
+const addAvailability = asyncHandler(async(req, res) => {
+  const doctor = Doctor.findOne(req.params._id)
+
+  let availability = doctor.availability
+
+  const newTimes = {
+    //doctorId: doctor._id,
+    date: Date.now(),
+    timeSlots: ['12:30PM', '1:00PM']
+  }
+
+  console.log(availability);
+  console.log(newTimes);
+
+  //availabilty.append(newTimes);
+
+  doctor.availability = availability
+
+  //doctor.save();
+
+  res.json({
+    availability: doctor.availability
+  })
+})
+app.put('/hospital/doctor_time/:id', addAvailability) 
 
 const PORT = process.env.PORT || 8000
 
