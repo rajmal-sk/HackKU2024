@@ -14,11 +14,7 @@ connectDB()
 
 const app = express()
 
-
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
 
 
@@ -37,7 +33,14 @@ const registerDoctor = asyncHandler(async (req, res) => {
       res.status(400)
       throw new Error('Doctor already exists')
     }
-  
+    let availabilityList = []
+    const slotes = ["10:00AM", "11:10AM"]
+    const date = Date.now()
+    for (let i = 1; i <= 10; i++) {
+      let tempDate = new Date(date)
+      tempDate.setDate(tempDate.getDate()+i)
+      availabilityList.push({date: tempDate, timeSlots: slotes})
+    }
     const doctor = await Doctor.create({
         name, 
         email, 
@@ -45,8 +48,9 @@ const registerDoctor = asyncHandler(async (req, res) => {
         dateOfBirth, 
         gender, 
         phoneNumber, 
-        specialization, 
-        hospitalAffiliation
+        specialization,
+        hospitalAffiliation,
+        availability : availabilityList
     })
   
     if (doctor) {
@@ -58,7 +62,8 @@ const registerDoctor = asyncHandler(async (req, res) => {
         gender: doctor.gender, 
         phoneNumber: doctor.phoneNumber, 
         specialization:doctor.specialization, 
-        hospitalAffiliation: doctor.hospitalAffiliation
+        hospitalAffiliation: doctor.hospitalAffiliation,
+        availability: doctor.availability
       })
     } else {
       res.status(400)
@@ -183,6 +188,45 @@ const addAvailability = asyncHandler(async(req, res) => {
   })
 })
 app.put('/hospital/doctor_time/:id', addAvailability) 
+
+
+
+
+async function updateDoctorAvailability (){
+  const _id = '661b46fa61283b3b55c1b6a1'
+  const doctor = Doctor.findOne(_id)
+  const DoctorAvailability = doctor.availability
+  try {
+    const currentDate = new Date();
+ 
+    // Remove availability records older than the current date
+    // await DoctorAvailability.deleteMany({
+    //   date: { $lt: currentDate }
+    // });
+ 
+    // Calculate the date for the 10th day from the current date
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() + 10);
+ 
+    // Add new availability records for the 10th day
+    // Customize this according to your application's requirements
+    const newAvailability = {
+      doctorId: _id/* Specify the doctor's ID */,
+      date: newDate,
+      timeSlots: ['10:00AM', '10:45AM', '11:30AM']/* Specify the available time slots */
+    };
+    DoctorAvailability = DoctorAvailability.append(newAvailability)
+    doctor.availability = DoctorAvailability
+    await doctor.save();
+ 
+    console.log('Doctor availability updated successfully');
+  } catch (error) {
+    console.error('Error updating doctor availability:', error);
+  }
+}
+ 
+// Schedule the update function to run every day at 10:15 PM
+cron.schedule('27 22 * * *', updateDoctorAvailability);
 
 const PORT = process.env.PORT || 8000
 

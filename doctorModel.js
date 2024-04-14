@@ -18,22 +18,22 @@ const reviewSchema = mongoose.Schema(
     }
 )
 
-const doctorAvailabilitySchema = new mongoose.Schema({
-  // doctorId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   required: true,
-  //   ref: 'Doctor'
-  // },
-  date: {
-    type: Date,
-    required: true,
-    unique: true,
-  },
-  timeSlots: {
-    type: [String],
-    required: true,
-  }
-});
+// const doctorAvailabilitySchema = mongoose.Schema({
+//   doctorId: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     required: true,
+//     ref: 'Doctor'
+//   },
+//   date: {
+//     type: String,
+//     required: true,
+//     unique: true,
+//   },
+//   timeSlots: {
+//     type: [String],
+//     required: true,
+//   }
+// });
 
 const doctorSchema = mongoose.Schema(
 {
@@ -67,13 +67,12 @@ const doctorSchema = mongoose.Schema(
         type: String,
         required: true,
     },
-    //availability: [doctorAvailabilitySchema],
-    availability:[{
-      date: {type: String,
-      default:"2024-15-30"},
-      timeSlots: {type: [String],
-      default:["12:00PM","12.45PM"]}
-    }],
+    availability: [
+      {
+        date: {type: Date, required:true},
+        timeSlots : {type:[String], required:true}
+      } 
+    ],
     password: {
       type: String,
       required: true,
