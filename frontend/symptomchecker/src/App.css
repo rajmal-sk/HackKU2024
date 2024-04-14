@@ -1,0 +1,25 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #6bc2df;
+}
+
+.company-logo img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.login-profile a {
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+.login-profile a:hover {
+  background-color: white;
+  color: #333;
+}

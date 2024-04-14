@@ -1,0 +1,86 @@
+.selecter {
+    position: left;
+    padding: 5px;
+  }
+  
+  .message-input {
+    display: flex;
+    width: 37.5%;
+    margin-top: 5px;
+    position: left;
+    bottom: 0; /* Stick the input box to the bottom */
+    background-color: white; /* Set a background color to separate the input box from the messages */
+    padding: 5px; /* Add some padding for better visual appearance */
+  }
+  
+  .message-input input {
+    flex: 1;
+    padding: 1px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Style for dropdown list */
+  input[list] {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+  input[list] option {
+    padding: 5px;
+  }
+  
+  /* Style for dropdown list */
+  .autocomplete {
+    position: bottom;
+    width: 100%;
+  }
+  
+  .autocomplete input {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .autocomplete .autocomplete-options {
+    position: absolute;
+    width: 100%;
+    top: 100%; /* Position the dropdown list below the input box */
+    max-height: 100px; /* Adjust height as needed */
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 1;
+  }
+  
+  .autocomplete .autocomplete-options option {
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+.chatbox {
+    position: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 5px; /* Adjust as needed */
+    border-color: black;
+    padding: 5px;
+  }
+  
+  .message-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  
+  .message {
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 5px;
+  }
